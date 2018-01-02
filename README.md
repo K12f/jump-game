@@ -6,6 +6,7 @@ wechat jump game
 ### TODO
 - 提高代码运行速度(alpha图片太耗时间)
 - 修复离棋子定点太近的问题
+- 补充 alpha中图片去除像素点的问题
 
 
 
