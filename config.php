@@ -2,7 +2,7 @@
 
 return [
 	'PRESS_TIME' => 2.1,
-	'SLEEP_TIME' => 2,
+	'SLEEP_TIME' => 1,
 	'CHESS_RGB'=>[
 		'r' => 54,
 		'g' => 60,
