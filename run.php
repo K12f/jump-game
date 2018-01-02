@@ -50,8 +50,8 @@ class JumpGameUp
 			} catch (Exception $e) {
 				throw $e;
 			}
-			$this->drawCircle($image, "./image/1_img.png", $this->_coordinate['x'], $this->_coordinate['y'], 10, 10, 0, 0, 0, 100);
-			$this->drawCircle($image, "./image/1_img.png", $this->_chessboardCoordinate['x'], $this->_chessboardCoordinate['y'], 10, 10, 0, 0, 0, 100);
+			$this->drawCircle($image, "./image/test_img.png", $this->_coordinate['x'], $this->_coordinate['y'], 10, 10, 0, 0, 0, 100);
+			$this->drawCircle($image, "./image/test_img.png", $this->_chessboardCoordinate['x'], $this->_chessboardCoordinate['y'], 10, 10, 0, 0, 0, 100);
 			
 			echo sprintf("chessCoordinate: (%02d,%02d)\n", $this->_coordinate['x'], $this->_coordinate['y']);
 			echo "<br />";
@@ -228,9 +228,9 @@ class JumpGameUp
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
 //
-				if (($red >= 130)
+				if (($red >= 130 )
 					&& ($green >= 130)
-					&& (($blue >= 100 && $blue <=245))
+					&& (($blue >= 100 && $blue <=240))
 				) {
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
@@ -243,7 +243,7 @@ class JumpGameUp
 			}
 			
 		}
-		$this->drawCircle($this->_image, "./alphaed/alpha_img_all{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 1, 1, 255, 0, 0, 0);
+		$this->drawCircle($this->_image, "./alphaed/alpha_img_all{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 1, 1, 0, 0, 0, 0);
 		//棋子极点去除
 		return $chessboardCoordinates;
 	}
