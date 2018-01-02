@@ -191,13 +191,14 @@ class JumpGameUp
 		$this->drawCircle($this->_image, "./alpha/alpha_img_{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 60, 200,0);
 		
 		$col = imagecolorallocatealpha($this->_image, 0, 0, 0, 0);
+		$gameBG = $this->_CONF['GAME_BG'];
 		for ($x = 0; $x < $this->_width; $x++) {
 			for ($y = 0; $y < $this->_height; $y++) {
 				
 				$RGB = $this->getRGB($x, $y);
-				$red = $RGB['red'];
-				$green = $RGB['green'];
-				$blue = $RGB['blue'];
+				$red = (int)$RGB['red'];
+				$green = (int)$RGB['green'];
+				$blue = (int)$RGB['blue'];
 				
 				// bg : 185-220,  185-220, 200-230
 				
@@ -230,8 +231,13 @@ class JumpGameUp
 //
 				if (($red >= 130 )
 					&& ($green >= 130)
-					&& (($blue >= 100 && $blue <=240))
+					&& (($blue >= 100 && $blue <247))
 				) {
+					imagesetpixel($this->_image, $x, $y, $col);
+				}
+				if(in_array($red,$gameBG['r'],true)
+					&&in_array($green,$gameBG['g'],true)
+					&&in_array($blue,$gameBG['b'],true) ){
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
 				
