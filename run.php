@@ -30,6 +30,8 @@ class JumpGameUp
 	 */
 	public function run()
 	{
+		//清空图片
+		
 		if ('cli' !== PHP_SAPI) {
 			$time1 = time() * 1000;
 			
@@ -188,7 +190,7 @@ class JumpGameUp
 	{
 		$chessboardCoordinates = [];
 		
-		$this->drawCircle($this->_image, "./alpha/alpha_img_{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 60, 200,0);
+		$this->drawCircle($this->_image, "./alpha/alpha_img_{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 60, 200, 0);
 		
 		$col = imagecolorallocatealpha($this->_image, 0, 0, 0, 0);
 		$gameBG = $this->_CONF['GAME_BG'];
@@ -208,7 +210,7 @@ class JumpGameUp
 				
 				
 				//在棋子坐标以下
-				if ($y > ($coordinateTop['y'] + round(($this->_coordinate['y'] - $coordinateTop['y']) / 3))) {
+				if ($y > ($coordinateTop['y'] + round(($this->_coordinate['y'] - $coordinateTop['y']) / 4))) {
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
 //				棋子在左边，x坐标左边全部去除
@@ -229,17 +231,31 @@ class JumpGameUp
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
 //
-				if (($red >= 130 )
-					&& ($green >= 130)
-					&& (($blue >= 100 && $blue <247))
-				) {
+//				if (($red >= 130 )
+//					&& ($green >= 130)
+//					&& (($blue >= 100 && $blue <247))
+//				) {
+//					imagesetpixel($this->_image, $x, $y, $col);
+//				}
+//				if(in_array($red,$gameBG['r'],true)
+//					&&in_array($green,$gameBG['g'],true)
+//					&&in_array($blue,$gameBG['b'],true) ){
+//					imagesetpixel($this->_image, $x, $y, $col);
+//				}
+				
+				//TODO 区分 背景+阴影下的背景
+				//shadow
+				if (($red >= 130 && $red <= 255)
+					&& ($green >= 120 && $green <= 230)
+					&& ($blue >= 100 && $blue <= 250)) {
+					imagesetpixel($this->_image, $x, $y, $col);
+				} elseif ($red >= 250
+					//bg
+					&& ($green >= 200 && $green <= 220)
+					&& ($blue >= 150 && $blue <= 220)) {
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
-				if(in_array($red,$gameBG['r'],true)
-					&&in_array($green,$gameBG['g'],true)
-					&&in_array($blue,$gameBG['b'],true) ){
-					imagesetpixel($this->_image, $x, $y, $col);
-				}
+				
 				
 				//获取所有棋盘坐标
 				$RGB = $this->getRGB($x, $y);
