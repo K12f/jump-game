@@ -130,9 +130,9 @@ class JumpGame
 			}
 			
 		}
+		$this->drawCircle($im_dst,$alphaName,$chessCoordinate['x'], $chessCoordinate['y'],300,250,0, 0, 0, 0);
 //		$black = imagecolorallocatealpha($im_dst, 0, 0, 0, 0);
 //		imagefilledellipse($im_dst, $chessCoordinate['x'], $chessCoordinate['y'], 200, 250, $black);
-		$this->drawCircle($im_dst,$alphaName,$chessCoordinate['x'], $chessCoordinate['y'],300,250,0, 0, 0, 0);
 //		imagedestroy($im_dst);
 	}
 	
@@ -209,8 +209,8 @@ class JumpGame
 			
 			// 截图
 			$this->screenCap();
-			$this->setImage('screen.png');
-			$image = imagecreatefrompng('screen.png');
+			$this->setImage('screen2.png');
+			$image = imagecreatefrompng('screen2.png');
 			
 			echo sprintf("#%05d: ", $id);
 			$chessCoordinate = $this->getChess();
@@ -246,8 +246,8 @@ class JumpGame
 	public function screenCap()
 	{
 		ob_start();
-		system('adb shell screencap -p /sdcard/screen.png');
-		system('adb pull /sdcard/screen.png .');
+		system('adb shell screencap -p /sdcard/screen2.png');
+		system('adb pull /sdcard/screen2.png .');
 		ob_end_clean();
 	}
 	
@@ -271,9 +271,9 @@ $jump = new JumpGame();
 $jump->run();
 
 //$alphaName = './image/alpha.png';
-//$image = imagecreatefrompng('screen.png');
+//$image = imagecreatefrompng('screen2.png');
 
-//$jump->setImage('screen.png');
+//$jump->setImage('screen2.png');
 //$chessCoordinate = $jump->getChess();
 //$jump->drawCircle($image,'test-coordinate.png', $chessCoordinate['x'], $chessCoordinate['y'], 300, 500,0,0,0,100);
 //
