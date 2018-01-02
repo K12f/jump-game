@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'PRESS_TIME' => 2.1,
+	'PRESS_TIME' => 2.09,
 	'SLEEP_TIME' => 1,
 	'CHESS_RGB'=>[
 		'r' => 54,
