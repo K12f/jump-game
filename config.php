@@ -12,7 +12,7 @@ return [
 		//差值区间
 		'diff'=>20
 	],
-	'CHESS_RATIO'=>1/5,
+	'CHESS_RATIO'=>1/2,
 	'CHESS_DIFF'=>0,
 	'BG_DIFF'=>25,
 	'CHESSBOARD_DIFF'=>12,
