@@ -11,7 +11,7 @@ return [
 		'diff'=>20
 	],
 	'CHESS_DIFF'=>0,
-	'BG_DIFF'=>30,
+	'BG_DIFF'=>25,
 	'CHESSBOARD_DIFF'=>12,
 ];
 

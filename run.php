@@ -59,6 +59,7 @@ class JumpGameUp
 				['序号', '坐标', '类型'],
 				[$id, "({$this->_coordinate['x']},{$this->_coordinate['y']})", '棋子'],
 				[$id, "({$this->_chessboardCoordinate['x']},{$this->_chessboardCoordinate['y']})", '棋盘'],
+				['------------------------'],
 			];
 			foreach ($data as $value) {
 				fputcsv($fp, $value);
@@ -69,7 +70,6 @@ class JumpGameUp
 			//4.按压
 			$this->press($time);
 			//5.等待下一次截图
-			$id++;
 			sleep($this->_CONF['SLEEP_TIME']);
 			imagedestroy($this->_image);
 		}
@@ -166,6 +166,8 @@ class JumpGameUp
 			for ($x = 0; $x < $this->_width; $x++) {
 				
 				$RGB = $this->getRGB($x, $y);
+				
+				//添加白色不去除
 				if ($this->isSimilar($bg, $RGB, $this->_CONF['BG_DIFF'])) {
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
