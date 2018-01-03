@@ -326,7 +326,7 @@ class JumpGameUp
 	private function calcPressTime(): int
 	{
 		$time = sqrt(pow(abs($this->_coordinate['x'] - $this->_chessboardCoordinate['x']), 2)
-				+ pow(abs($this->_coordinate['y'] - $this->_chessboardCoordinate['y']), 2)) * $this->_CONF['PRESS_RATIO'];
+				+ pow(abs($this->_coordinate['y'] - $this->_chessboardCoordinate['y']), 2)) * $this->_CONF['MAX_PRESS_RATIO'];
 		
 		return round($time);
 	}
