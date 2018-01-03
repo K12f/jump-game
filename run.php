@@ -72,6 +72,7 @@ class JumpGameUp
 			//5.等待下一次截图
 			sleep($this->_CONF['SLEEP_TIME']);
 			imagedestroy($this->_image);
+//			exit();
 		}
 		fclose($fp);
 	}
@@ -103,7 +104,7 @@ class JumpGameUp
 		if (empty($coordinateTop)) {
 			throw new Exception('没有发现棋子极点坐标', 404);
 		}
-		//3.将图片二值化，去除杂质
+		//3.将图片二值化，去除图片背景
 		//4.获取棋盘
 		$chessboardCoordinates = $this->alphaImage($coordinateTop);
 		if (empty($chessboardCoordinates)) {
@@ -138,9 +139,10 @@ class JumpGameUp
 		}
 		//排序
 		usort($coordinates, function ($a, $b) {
-			$diff = round(sqrt($a['x'] ** 2 + $a['y'] ** 2));
-			$diff2 = round(sqrt($b['x'] ** 2 + $b['y'] ** 2));
-			return $diff <=> $diff2;
+//			$diff = round(sqrt($a['x'] ** 2 + $a['y'] ** 2));
+//			$diff2 = round(sqrt($b['x'] ** 2 + $b['y'] ** 2));
+//			return $diff <=> $diff2;
+			return $a['y']<=>$b['y'];
 		});
 		return $coordinates;
 	}
@@ -158,7 +160,7 @@ class JumpGameUp
 		$tempChessboard = [];
 		$isChessboard = false;
 		$this->drawCircle($this->_image, "./alpha/alpha_img_{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 60, 200);
-		
+		$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 255);
 		$col = imagecolorallocatealpha($this->_image, 0, 0, 0, 0);
 		
 		$bg = $this->getRGB($this->_width / 2, $this->_height / 5);
@@ -167,12 +169,11 @@ class JumpGameUp
 				
 				$RGB = $this->getRGB($x, $y);
 				
-				//添加白色不去除
 				if ($this->isSimilar($bg, $RGB, $this->_CONF['BG_DIFF'])) {
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
 				//在棋子坐标以下
-				if ($y > ($coordinateTop['y'] + round(($this->_coordinate['y'] - $coordinateTop['y']) / 4))) {
+				if ($y > ($coordinateTop['y'] + round(($this->_coordinate['y'] - $coordinateTop['y']) / 2))) {
 					imagesetpixel($this->_image, $x, $y, $col);
 				}
 				//棋子在左边，x坐标左边全部去除
@@ -332,6 +333,7 @@ class JumpGameUp
 
 try {
 	(new JumpGameUp())->run();
+//	(new JumpGameUp())->screenCap();
 } catch (Exception $e) {
 	echo $e->getMessage();
 }
