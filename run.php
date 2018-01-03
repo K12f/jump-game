@@ -165,7 +165,7 @@ class JumpGameUp
 		if ($this->_CONF['DEBUG']) {
 			$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 255);
 		}
-		imagefilledellipse($this->_image, $coordinateTop['x'], $coordinateTop['y'], 80, 300, $col);
+		imagefilledellipse($this->_image, $coordinateTop['x'], $coordinateTop['y'], 85, 300, $col);
 		
 		$bg = $this->getRGB($this->_width / 2, $this->_height / 5);
 		for ($y = 0; $y < $this->_height; $y++) {
