@@ -13,6 +13,7 @@ class JumpGameUp
 	private $_id = 0;
 	private $_coordinate = [];
 	private $_chessboardCoordinate = [];
+	private $_coordinatePath = './coordinate.csv';
 	
 	public function __construct()
 	{
@@ -31,7 +32,10 @@ class JumpGameUp
 	public function run()
 	{
 		//清空图片
-		$fp = fopen('./coordinate.csv', 'w');
+		if(is_file($this->_coordinatePath)){
+			unlink($this->_coordinatePath);
+		}
+		$fp = fopen($this->_coordinatePath, 'w');
 		for ($id = 1; ; $id++) {
 			$this->_id = $id;
 			echo sprintf("#%05d: ", $id);
@@ -48,13 +52,11 @@ class JumpGameUp
 			} catch (Exception $e) {
 				throw $e;
 			}
-			$this->drawCircle($this->_imageInit, "./image/{$id}_img.png", $this->_coordinate['x'], $this->_coordinate['y'], 10, 10, 255);
-			$this->drawCircle($this->_imageInit, "./image/{$id}_img.png", $this->_chessboardCoordinate['x'], $this->_chessboardCoordinate['y'], 10, 10, 255);
+//			$this->drawCircle($this->_imageInit, "./image/{$id}_img.png", $this->_coordinate['x'], $this->_coordinate['y'], 10, 10, 255);
+//			$this->drawCircle($this->_imageInit, "./image/{$id}_img.png", $this->_chessboardCoordinate['x'], $this->_chessboardCoordinate['y'], 10, 10, 255);
 			
 			echo sprintf("chessCoordinate: (%02d,%02d)\n", $this->_coordinate['x'], $this->_coordinate['y']);
-			
 			echo sprintf("chessboardCoordinate: (%02d,%02d)\n", $this->_chessboardCoordinate['x'], $this->_chessboardCoordinate['y']);
-			
 			$data = [
 				['序号', '坐标', '类型'],
 				[$id, "({$this->_coordinate['x']},{$this->_coordinate['y']})", '棋子'],
@@ -159,9 +161,10 @@ class JumpGameUp
 		$chessboardCoordinates = [];
 		$tempChessboard = [];
 		$isChessboard = false;
-		$this->drawCircle($this->_image, "./alpha/alpha_img_{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 60, 200);
-		$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 255);
 		$col = imagecolorallocatealpha($this->_image, 0, 0, 0, 0);
+		imagefilledellipse($this->_image,  $coordinateTop['x'], $coordinateTop['y'], 60, 200, $col);
+//		$this->drawCircle($this->_image, "./alpha/alpha_img_{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 60, 200);
+//		$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 255);
 		
 		$bg = $this->getRGB($this->_width / 2, $this->_height / 5);
 		for ($y = 0; $y < $this->_height; $y++) {
@@ -209,7 +212,7 @@ class JumpGameUp
 			}
 			
 		}
-		$this->drawCircle($this->_image, "./alphaed/alpha_img_all{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 1, 1, 255);
+//		$this->drawCircle($this->_image, "./alphaed/alpha_img_all{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 1, 1, 255);
 		return $chessboardCoordinates;
 	}
 	
