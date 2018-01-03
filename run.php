@@ -155,6 +155,7 @@ class JumpGameUp
 	public function alphaImage(array $coordinateTop): array
 	{
 		$chessboardCoordinates = [];
+		$tempChessboard = [];
 		$isChessboard = false;
 		$this->drawCircle($this->_image, "./alpha/alpha_img_{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 60, 200);
 		
@@ -193,12 +194,12 @@ class JumpGameUp
 					//获取棋盘顶点坐标
 					if (empty($isChessboard)) {
 						$isChessboard = true;
-						$chessboardCoordinates[] = $RGB;
+						$tempChessboard = $RGB;
 					}
-					if (empty($chessboardCoordinates[0])) {
+					if (empty($tempChessboard)) {
 						throw new Exception('未发现棋盘顶点坐标', 404);
 					}
-					if ($this->isSimilar($RGB, $chessboardCoordinates[0], $this->_CONF['CHESSBOARD_DIFF'])) {
+					if ($this->isSimilar($RGB, $tempChessboard, $this->_CONF['CHESSBOARD_DIFF'])) {
 						$chessboardCoordinates[] = ['x' => $x, 'y' => $y];
 					}
 				}
