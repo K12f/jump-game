@@ -1,7 +1,8 @@
 <?php
 
 return [
-	'PRESS_RATIO' => 2.09,
+	'MAX_PRESS_RATIO' => 2.09,
+	'MIN_PRESS_RATIO' => 2.04,
 	'SLEEP_TIME' => 1,
 	'CHESS_RGB'=>[
 		'r' => 54,
