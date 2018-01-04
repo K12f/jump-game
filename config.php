@@ -6,9 +6,9 @@ return [
 	'MIN_PRESS_RATIO' => 2.06,
 	'SLEEP_TIME' => 1,
 	'CHESS_RGB'=>[
-		'r' => 54,
-		'g' => 60,
-		'b' => 102,
+		'r' => 50,
+		'g' => 55,
+		'b' => 70,
 		//差值区间
 		'diff'=>20
 	],
