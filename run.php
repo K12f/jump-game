@@ -180,8 +180,8 @@ class JumpGameUp
 		$y = round(abs($right['y'] + $left['y']) / 2);
 		
 		//杂质干扰修正
-		if(round(abs($left['x']-$right['x']))>50
-		||round(abs($left['y']-$right['y']))>50){
+		if(round(abs($left['x']-$right['x']))>60
+		||round(abs($left['y']-$right['y']))>20){
 			$x = $coordinateTop['x'];
 			$y = $coordinateTop['y']+120;
 		}
