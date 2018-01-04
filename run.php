@@ -77,7 +77,6 @@ class JumpGameUp
 			sleep($this->_CONF['SLEEP_TIME']);
 			imagedestroy($this->_image);
 			imagedestroy($this->_imageInit);
-			exit();
 		}
 	}
 	
