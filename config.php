@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'DEBUG'=>true,
+	'DEBUG'=>false,
 	'MAX_PRESS_RATIO' => 2.08,
 	'SLEEP_TIME' => 1,
 	'CHESS_RGB'=>[
