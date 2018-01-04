@@ -202,7 +202,7 @@ class JumpGameUp
 		if ($this->_CONF['DEBUG']) {
 			$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 9, 55, 218);
 		}
-		$circle = round(abs($this->_coordinate['y'] - $coordinateTop['y']) + $this->_CONF['CHESS_DIFF']) * 2;
+		$circle = round(abs($this->_coordinate['y'] - $coordinateTop['y']) + $this->_CONF['CHESS_DIFF']);
 		imagefilledellipse($this->_image, $this->_coordinate['x'], $this->_coordinate['y'], $circle, $circle, $col);
 		
 		$bg = $this->getRGB($this->_width / 2, $this->_height / 5);
@@ -217,7 +217,7 @@ class JumpGameUp
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
 					//在棋子中心点坐标以下
-					if ($y > $this->_coordinate['y'] + $this->_CONF['BG_DIFF']) {
+					if ($y > ($this->_coordinate['y'] - $circle)) {
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
 					//棋子在左边，x坐标左边全部去除
