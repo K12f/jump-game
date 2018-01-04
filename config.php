@@ -10,14 +10,7 @@ return [
 		'b' => 99,
 		//差值区间
 	],
-	'CHESS_SHIN_RGB'=>[
-		'r' => 147,
-		'g' => 138,
-		'b' => 177,
-		//差值区间
-	],
 	'CHESS_DIFF'=>20,
-	'CHESS_RATIO'=>2/3,
 	'BG_DIFF'=>25,
 	'CHESSBOARD_DIFF'=>12,
 ];
