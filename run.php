@@ -14,6 +14,7 @@ class JumpGameUp
 	private $_coordinate = [];
 	private $_chessboardCoordinate = [];
 	private $_coordinatePath = './coordinate.csv';
+	private $_screenName = './screen.png';
 	
 	public function __construct()
 	{
@@ -32,21 +33,23 @@ class JumpGameUp
 	public function run()
 	{
 		//清空图片
-		if (is_file($this->_coordinatePath)) {
-			unlink($this->_coordinatePath);
-		}
-		$fp = fopen($this->_coordinatePath, 'w');
 		for ($id = 1; ; $id++) {
+			$timeStart = time() * 1000;
 			$this->_id = $id;
 			echo sprintf("#%05d: ", $id);
 			//0.扫描手机，获取图片
 			$this->screenCap();
 			//1.获取图片信息
-			$this->setImage('screen.png');
+			$this->setImage($this->_screenName);
 			if (empty($this->_image)) {
 				throw new Exception('设置screen图片信息失败', 404);
 			}
 			//2.扫描整张图片,获取棋子坐标，棋盘中心点坐标
+			$timeEnd = time() * 1000;
+			echo sprintf("speedTime : (%d)\n", $timeEnd - $timeStart);
+			
+			$timeStart = time() * 1000;
+			
 			try {
 				$this->scan();
 			} catch (Exception $e) {
@@ -57,18 +60,13 @@ class JumpGameUp
 				$this->drawCircle($this->_imageInit, "./image/{$id}_img.png", $this->_chessboardCoordinate['x'], $this->_chessboardCoordinate['y'], 10, 10, 184);
 				
 			}
+			$timeEnd = time() * 1000;
+			echo sprintf("speedTime (%d)\n", $timeEnd - $timeStart);
+			
+			echo sprintf("chessCoordinate: (%02d,%02d)\n", $this->_coordinate['x'], $this->_coordinate['y']);
 			
 			echo sprintf("chessCoordinate: (%02d,%02d)\n", $this->_coordinate['x'], $this->_coordinate['y']);
 			echo sprintf("chessboardCoordinate: (%02d,%02d)\n", $this->_chessboardCoordinate['x'], $this->_chessboardCoordinate['y']);
-			$data = [
-				['序号', '坐标', '类型'],
-				[$id, "({$this->_coordinate['x']},{$this->_coordinate['y']})", '棋子'],
-				[$id, "({$this->_chessboardCoordinate['x']},{$this->_chessboardCoordinate['y']})", '棋盘'],
-				['------------------------'],
-			];
-			foreach ($data as $value) {
-				fputcsv($fp, $value);
-			}
 			//3.计算按压时间
 			$time = $this->calcPressTime();
 			
@@ -77,8 +75,9 @@ class JumpGameUp
 			//5.等待下一次截图
 			sleep($this->_CONF['SLEEP_TIME']);
 			imagedestroy($this->_image);
+			imagedestroy($this->_imageInit);
+//			exit();
 		}
-		fclose($fp);
 	}
 	
 	/**
@@ -92,20 +91,19 @@ class JumpGameUp
 	 */
 	public function scan()
 	{
+		$timeStart = time() * 1000;
 		//0.所有棋子坐标
 		$coordinates = $this->getChessCoordinates();
 		if (empty($coordinates)) {
 			throw new Exception('没有发现棋子坐标集合', 404);
 		}
-		//1.棋子坐标
-		//排序
 		
-		$this->_coordinate = $this->getChessCoordinate($coordinates);
-//		$this->_coordinate['x'] = $this->_coordinate['x'] - $this->_CONF['CHESS_DIFF'];
-		if (empty($this->_coordinate)) {
-			throw new Exception('没有发现棋子', 404);
-		}
+		$timeEnd = time() * 1000;
+		echo sprintf("所有棋子坐标 (%d)\n", $timeEnd - $timeStart);
+		$timeStart = time() * 1000;
 		//2.棋子极点坐标
+		//排序
+		//1.棋子坐标
 		usort($coordinates, function ($a, $b) {
 			return $a['y'] <=> $b['y'];
 		});
@@ -113,17 +111,31 @@ class JumpGameUp
 		if (empty($coordinateTop)) {
 			throw new Exception('没有发现棋子极点坐标', 404);
 		}
+		
+		$this->_coordinate = $this->getChessCoordinate($coordinates,$coordinateTop);
+		if (empty($this->_coordinate)) {
+			throw new Exception('没有发现棋子', 404);
+		}
+		$timeEnd = time() * 1000;
+		echo sprintf("棋子坐标 (%d)\n", $timeEnd - $timeStart);
+		$timeStart = time() * 1000;
 		//3.将图片二值化，去除图片背景
 		//4.获取棋盘
 		$chessboardCoordinates = $this->alphaImage($coordinateTop);
 		if (empty($chessboardCoordinates)) {
 			throw new Exception('没有发现棋盘坐标集合', 404);
 		}
+		$timeEnd = time() * 1000;
+		echo sprintf("获取棋盘 (%d)\n", $timeEnd - $timeStart);
+		$timeStart = time() * 1000;
 		//5.获取棋盘中心点坐标
 		$this->_chessboardCoordinate = $this->getChessboardCoordinate($chessboardCoordinates);
 		if (empty($this->_chessboardCoordinate)) {
 			throw new Exception('没有发现棋盘坐标', 404);
 		}
+		$timeEnd = time() * 1000;
+		echo sprintf("获取棋盘中心点坐标 (%d)\n", $timeEnd - $timeStart);
+		$timeStart = time() * 1000;
 	}
 	
 	/**
@@ -139,9 +151,9 @@ class JumpGameUp
 				$RGB = $this->getRGB($x, $y);
 				//1.获取棋子
 				//配置文件中，棋子的RGB
-				if (abs($RGB['red'] - $this->_CONF['CHESS_RGB']['r']) < $this->_CONF['CHESS_RGB']['diff']
-					&& abs($RGB['green'] - $this->_CONF['CHESS_RGB']['g']) < $this->_CONF['CHESS_RGB']['diff']
-					&& abs($RGB['blue'] - $this->_CONF['CHESS_RGB']['b']) < $this->_CONF['CHESS_RGB']['diff']) {
+				if (abs($RGB['red'] - $this->_CONF['CHESS_RGB']['r']) < $this->_CONF['CHESS_DIFF']
+					&& abs($RGB['green'] - $this->_CONF['CHESS_RGB']['g']) < $this->_CONF['CHESS_DIFF']
+					&& abs($RGB['blue'] - $this->_CONF['CHESS_RGB']['b']) < $this->_CONF['CHESS_DIFF']) {
 					$coordinates[] = ['x' => $x, 'y' => $y];
 //					$this->drawCircle($this->_imageInit,'./alpha/alpha.png',$x,$y,1,1,255);
 				}
@@ -153,17 +165,26 @@ class JumpGameUp
 	/**
 	 * 获取棋子坐标
 	 * @param array $chessCoordinates
+	 * @param array $coordinateTop
 	 * @return array
 	 */
-	public function getChessCoordinate(array $chessCoordinates): array
+	public function getChessCoordinate(array $chessCoordinates,array $coordinateTop): array
 	{
 		usort($chessCoordinates, function ($a, $b) {
 			return $a['x'] <=> $b['x'];
 		});
 		$left = array_shift($chessCoordinates);
 		$right = array_pop($chessCoordinates);
+		
 		$x = $left['x'] + round(abs($right['x'] - $left['x']) / 2);
 		$y = round(abs($right['y'] + $left['y']) / 2);
+		
+		//杂质干扰修正
+		if(round(abs($left['x']-$right['x']))>50
+		||round(abs($left['y']-$right['y']))>50){
+			$x = $coordinateTop['x'];
+			$y = $coordinateTop['y']+120;
+		}
 		return ['x' => $x, 'y' => $y];
 	}
 	
@@ -177,12 +198,12 @@ class JumpGameUp
 	{
 		$chessboardCoordinates = [];
 		$tempChessboard = [];
-		$isChessboard = false;
 		$col = imagecolorallocatealpha($this->_image, 0, 0, 0, 0);
 		if ($this->_CONF['DEBUG']) {
-			$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 9,55,218);
+			$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 9, 55, 218);
 		}
-		imagefilledellipse($this->_image, $coordinateTop['x'], $coordinateTop['y'], 90, 300, $col);
+		$circle = round(abs($this->_coordinate['y'] - $coordinateTop['y']) + $this->_CONF['CHESS_DIFF']) * 2;
+		imagefilledellipse($this->_image, $this->_coordinate['x'], $this->_coordinate['y'], $circle, $circle, $col);
 		
 		$bg = $this->getRGB($this->_width / 2, $this->_height / 5);
 		for ($y = 0; $y < $this->_height; $y++) {
@@ -190,32 +211,34 @@ class JumpGameUp
 				
 				$RGB = $this->getRGB($x, $y);
 				
-				if ($this->isSimilar($bg, $RGB, $this->_CONF['BG_DIFF'])) {
-					imagesetpixel($this->_image, $x, $y, $col);
-				}
-				//在棋子坐标以下
-				if ($y > ($coordinateTop['y'] + round(($this->_coordinate['y'] - $coordinateTop['y']) * ($this->_CONF['CHESS_RATIO'])))) {
-					imagesetpixel($this->_image, $x, $y, $col);
-				}
-				//棋子在左边，x坐标左边全部去除
-				if ($coordinateTop['x'] < round($this->_width / 2) && $x <= $coordinateTop['x']) {
-					imagesetpixel($this->_image, $x, $y, $col);
-				}
-				//棋子在右边，x坐标右边全部去除
-				if ($coordinateTop['x'] > round($this->_width / 2) && $x >= $coordinateTop['x']) {
-					imagesetpixel($this->_image, $x, $y, $col);
-				}
-				
-				//在区域之外
-				if ($y < $this->_height / 3 || $y > $this->_height / 13 * 12) {
-					imagesetpixel($this->_image, $x, $y, $col);
+				if (!$this->isBG($RGB)) {
+					
+					if ($this->isSimilar($bg, $RGB, $this->_CONF['BG_DIFF'])) {
+						imagesetpixel($this->_image, $x, $y, $col);
+					}
+					//在棋子中心点坐标以下
+					if ($y > $this->_coordinate['y'] + $this->_CONF['BG_DIFF']) {
+						imagesetpixel($this->_image, $x, $y, $col);
+					}
+					//棋子在左边，x坐标左边全部去除
+					if ($coordinateTop['x'] < round($this->_width / 2) && $x <= $coordinateTop['x']) {
+						imagesetpixel($this->_image, $x, $y, $col);
+					}
+					//棋子在右边，x坐标右边全部去除
+					if ($coordinateTop['x'] > round($this->_width / 2) && $x >= $coordinateTop['x']) {
+						imagesetpixel($this->_image, $x, $y, $col);
+					}
+					
+					//在区域之外
+					if ($y < $this->_height / 3 || $y > $this->_height / 13 * 12) {
+						imagesetpixel($this->_image, $x, $y, $col);
+					}
 				}
 				//获取所有棋盘坐标
 				$RGB = $this->getRGB($x, $y);
 				if ($RGB['red'] !== 0 && $RGB['green'] !== 0 && $RGB['blue'] !== 0) {
 					//获取棋盘顶点坐标
-					if (empty($isChessboard)) {
-						$isChessboard = true;
+					if (empty($tempChessboard)) {
 						$tempChessboard = $RGB;
 					}
 					if (empty($tempChessboard)) {
@@ -257,9 +280,12 @@ class JumpGameUp
 		});
 		$top = array_shift($chessboardCoordinate1);
 		$left = array_shift($chessboardCoordinate2);
-
-//		$x = (int)round(($right['x'] - $left['x']) / 2 + $left['x']);
 		return ['x' => $top['x'], 'y' => $left['y']];
+	}
+	
+	public function isBG($color)
+	{
+		return $color['red'] === 0 && $color['green'] === 0 && $color['red'] === 0;
 	}
 	
 	public function isSimilar(array $color1, array $color2, int $diff): bool
