@@ -59,7 +59,7 @@ class JumpGameUp
 			if ($this->_CONF['DEBUG']) {
 				$this->drawCircle($this->_imageInit, "./image/{$id}_img.png", $this->_coordinate['x'], $this->_coordinate['y'], 10, 10, 255);
 				$this->drawCircle($this->_imageInit, "./image/{$id}_img.png", $this->_chessboardCoordinate['x'], $this->_chessboardCoordinate['y'], 10, 10, 184);
-				
+				$this->drawCircle($this->_imageInit, "./image/{$id}_img.png", $this->_coordinateShin['x'], $this->_coordinateShin['y'], 10, 10, 255, 49, 194);
 			}
 			$timeEnd = time() * 1000;
 			echo sprintf("speedTime (%d)\n", $timeEnd - $timeStart);
@@ -164,7 +164,6 @@ class JumpGameUp
 					&& $RGB['green'] === 141
 					&& $RGB['blue'] === 180) {
 					$this->_coordinateShin = ['x' => $x, 'y' => $y];
-					$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $x, $y, 10, 10, 255, 49, 194);
 					$isShin = true;
 				}
 			}
