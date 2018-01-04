@@ -1,7 +1,7 @@
 <?php
 
 return [
-	'DEBUG'=>false,
+	'DEBUG'=>true,
 	'MAX_PRESS_RATIO' => 2.08,
 	'SLEEP_TIME' => 1,
 	'CHESS_RGB'=>[
@@ -15,8 +15,7 @@ return [
 	'CHESSBOARD_DIFF'=>12,
 ];
 
-// 52 52 59
-// 43 43 73
-// 57 54 83
-
-//147 138 177
+// 粉色  修正的旗子但
+// 红色 棋子中心点
+// 蓝色 棋子顶点
+// 深红色 棋盘中心点
