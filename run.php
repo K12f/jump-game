@@ -218,14 +218,12 @@ class JumpGameUp
 			$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 9, 55, 218);
 		}
 		$circle = round(abs($this->_coordinate['y'] - $coordinateTop['y']) + $this->_CONF['CHESS_DIFF']);
-//		imagefilledellipse($this->_image, $this->_coordinate['x'], $this->_coordinate['y'], round($circle*3/5), $circle*2, $col);
 		$points = [
 			$coordinateTop['x'],$coordinateTop['y']-20,
 			round($this->_coordinate['x']-$circle),round($this->_coordinate['y']),
 			round($this->_coordinate['x']+$circle),round($this->_coordinate['y']),
 		];
 		imagefilledpolygon($this->_image,$points,3,$col);
-		imagefilledpolygon($this->_imageInit,$points,3,$col);
 		$bg = $this->getRGB($this->_width / 2, $this->_height / 5);
 		for ($y = 0; $y < $this->_height; $y++) {
 			for ($x = 0; $x < $this->_width; $x++) {
@@ -275,7 +273,6 @@ class JumpGameUp
 		}
 		if ($this->_CONF['DEBUG']) {
 			$this->drawCircle($this->_image, "./alphaed/alpha_img_all{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 0, 0, 255);
-			$this->drawCircle($this->_imageInit, "./alpha/alpha_{$this->_id}.png", $coordinateTop['x'], $coordinateTop['y'], 0, 0, 255);
 		}
 		return $chessboardCoordinates;
 	}
