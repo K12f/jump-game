@@ -74,7 +74,7 @@ class JumpGameUp
 			//4.按压
 			$this->press($time);
 			//5.等待下一次截图
-			$sleep = $this->_CONF['SLEEP_TIME_MIN']+(($this->_CONF['SLEEP_TIME_MAX']-$this->_CONF['SLEEP_TIME_MIN'])*rand(0,10)*0.1);
+			$sleep = $this->_CONF['SLEEP_TIME_MIN'] + (($this->_CONF['SLEEP_TIME_MAX'] - $this->_CONF['SLEEP_TIME_MIN']) * rand(0, 10) * 0.1);
 			sleep($sleep);
 			imagedestroy($this->_image);
 			imagedestroy($this->_imageInit);
@@ -222,18 +222,18 @@ class JumpGameUp
 		}
 		$circle = round(abs($this->_coordinate['y'] - $coordinateTop['y']) + $this->_CONF['CHESS_DIFF']);
 		$points = [
-			$coordinateTop['x'],$coordinateTop['y']-20,
-			round($this->_coordinate['x']-$circle),round($this->_coordinate['y']),
-			round($this->_coordinate['x']+$circle),round($this->_coordinate['y']),
+			$coordinateTop['x'], $coordinateTop['y'] - 20,
+			round($this->_coordinate['x'] - $circle), round($this->_coordinate['y']),
+			round($this->_coordinate['x'] + $circle), round($this->_coordinate['y']),
 		];
-		imagefilledpolygon($this->_image,$points,3,$col);
+		imagefilledpolygon($this->_image, $points, 3, $col);
 		$bg = $this->getRGB($this->_width / 2, $this->_height / 5);
 		for ($y = 0; $y < $this->_height; $y++) {
 			for ($x = 0; $x < $this->_width; $x++) {
 				
 				$RGB = $this->getRGB($x, $y);
 				
-				if (!$this->isBG($RGB)) {
+				if (!$this->isBG($RGB) && !$this->isChess($RGB)) {
 					
 					if ($this->isSimilar($bg, $RGB, $this->_CONF['BG_DIFF'])) {
 						imagesetpixel($this->_image, $x, $y, $col);
@@ -243,11 +243,11 @@ class JumpGameUp
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
 					//棋子在左边，x坐标左边全部去除
-					if ($coordinateTop['x'] < round($this->_width / 2) && $x <= $coordinateTop['x']) {
+					if ($coordinateTop['x'] < round($this->_width / 2) && $x <= ($coordinateTop['x']+$this->_CONF['CHESS_DIFF'])) {
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
 					//棋子在右边，x坐标右边全部去除
-					if ($coordinateTop['x'] > round($this->_width / 2) && $x >= $coordinateTop['x']) {
+					if ($coordinateTop['x'] > round($this->_width / 2) && $x >= ($coordinateTop['x']-$this->_CONF['CHESS_DIFF'])) {
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
 					
@@ -306,7 +306,27 @@ class JumpGameUp
 		return $center;
 	}
 	
-	public function isBG($color)
+	/**
+	 * 是否是棋子颜色
+	 * @param array $color
+	 * @return bool
+	 */
+	public function isChess(array $color): bool
+	{
+		if (abs($color['red'] - $this->_CONF['CHESS_RGB']['r']) < $this->_CONF['CHESS_DIFF']
+			&& abs($color['green'] - $this->_CONF['CHESS_RGB']['g']) < $this->_CONF['CHESS_DIFF']
+			&& abs($color['blue'] - $this->_CONF['CHESS_RGB']['b']) < $this->_CONF['CHESS_DIFF']) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 是否是背景色
+	 * @param array $color
+	 * @return bool
+	 */
+	public function isBG(array $color)
 	{
 		return $color['red'] === 0 && $color['green'] === 0 && $color['red'] === 0;
 	}
@@ -351,10 +371,10 @@ class JumpGameUp
 	 */
 	public function press(int $time)
 	{
-		$px = rand(300,400);
-		$py = rand(400,600);
-		$ux = $px + rand(-10,10);
-		$uy = $py + rand(-10,10);
+		$px = rand(300, 400);
+		$py = rand(400, 600);
+		$ux = $px + rand(-10, 10);
+		$uy = $py + rand(-10, 10);
 		$swipe = sprintf("%s %s %s %s", $px, $py, $ux, $uy);
 		system('adb shell input swipe ' . $swipe . ' ' . $time);
 	}
