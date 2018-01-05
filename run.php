@@ -14,7 +14,7 @@ class JumpGameUp
 	private $_coordinate = [];
 	private $_coordinateShin = [];
 	private $_chessboardCoordinate = [];
-	private $_coordinatePath = './coordinate.csv';
+	
 	private $_screenName = './screen.png';
 	
 	public function __construct()
