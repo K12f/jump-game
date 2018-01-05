@@ -74,9 +74,11 @@ class JumpGameUp
 			//4.按压
 			$this->press($time);
 			//5.等待下一次截图
-			sleep($this->_CONF['SLEEP_TIME']);
+			$sleep = $this->_CONF['SLEEP_TIME_MIN']+(($this->_CONF['SLEEP_TIME_MAX']-$this->_CONF['SLEEP_TIME_MIN'])*rand(0,10)*0.1);
+			sleep($sleep);
 			imagedestroy($this->_image);
 			imagedestroy($this->_imageInit);
+//			exit();
 		}
 	}
 	
@@ -347,7 +349,12 @@ class JumpGameUp
 	 */
 	public function press(int $time)
 	{
-		system('adb shell input swipe 500 500 500 501 ' . $time);
+		$px = rand(300,400);
+		$py = rand(400,600);
+		$ux = $px + rand(-10,10);
+		$uy = $py + rand(-10,10);
+		$swipe = sprintf("%s %s %s %s", $px, $py, $ux, $uy);
+		system('adb shell input swipe ' . $swipe . ' ' . $time);
 	}
 	
 	/**
