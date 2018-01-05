@@ -2,8 +2,10 @@
 
 return [
 	'DEBUG'=>true,
-	'MAX_PRESS_RATIO' => 2.08,
-	'SLEEP_TIME' => 1,
+	'MAX_PRESS_RATIO' => 2.09,
+	'SLEEP_TIME_MIN' => 1,
+	'SLEEP_TIME_MAX' => 2.5,
+	'PRESS_EXP' => 0.842225,
 	'CHESS_RGB'=>[
 		'r' => 57,
 		'g' => 57,
