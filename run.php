@@ -15,7 +15,7 @@ class JumpGameUp
 	private $_coordinateShin = [];
 	private $_chessboardCoordinate = [];
 	
-	private $_screenName = './screen.png';
+	private $_screenName = 'screen.png';
 	
 	public function __construct()
 	{
@@ -39,7 +39,9 @@ class JumpGameUp
 			$this->_id = $id;
 			echo sprintf("#%05d: ", $id);
 			//0.扫描手机，获取图片
+
 			$this->screenCap();
+			file_put_contents("./screen/screen_{$this->_id}.png", file_get_contents($this->_screenName));
 			//1.获取图片信息
 			$this->setImage($this->_screenName);
 			if (empty($this->_image)) {
@@ -78,7 +80,6 @@ class JumpGameUp
 			sleep($sleep);
 			imagedestroy($this->_image);
 			imagedestroy($this->_imageInit);
-//			exit();
 		}
 	}
 	
@@ -158,7 +159,7 @@ class JumpGameUp
 					&& abs($RGB['green'] - $this->_CONF['CHESS_RGB']['g']) < $this->_CONF['CHESS_DIFF']
 					&& abs($RGB['blue'] - $this->_CONF['CHESS_RGB']['b']) < $this->_CONF['CHESS_DIFF']) {
 					$coordinates[] = ['x' => $x, 'y' => $y];
-//					$this->drawCircle($this->_imageInit,'./alpha/alpha.png',$x,$y,1,1,255);
+//					$this->drawCircle($this->_imageInit,'./screen/screen.png',$x,$y,1,1,255);
 				}
 				//修正棋子坐标
 				if (empty($isShin)
@@ -220,21 +221,32 @@ class JumpGameUp
 		if ($this->_CONF['DEBUG']) {
 			$this->drawCircle($this->_imageInit, "./image/{$this->_id}_img.png", $coordinateTop['x'], $coordinateTop['y'], 10, 10, 9, 55, 218);
 		}
-		$circle = round(abs($this->_coordinate['y'] - $coordinateTop['y']) + $this->_CONF['CHESS_DIFF']);
-		$points = [
-			$coordinateTop['x'], $coordinateTop['y'] - 20,
-			round($this->_coordinate['x'] - $circle), round($this->_coordinate['y']),
-			round($this->_coordinate['x'] + $circle), round($this->_coordinate['y']),
-		];
+		$circle = round(abs($this->_coordinate['y'] - $coordinateTop['y']));
+		
+		//棋子在左边，x坐标左边全部去除
+		if ($coordinateTop['x'] < round($this->_width / 2)) {
+			$points = [
+				round($this->_coordinate['x']), round($this->_coordinate['y'] - $circle / 2),
+				round($this->_coordinate['x']), round($this->_coordinate['y']),
+				round($this->_coordinate['x'] + $circle), round($this->_coordinate['y']),
+			];
+		}
+		//棋子在右边，x坐标右边全部去除
+		if ($coordinateTop['x'] > round($this->_width / 2)) {
+			$points = [
+				round($this->_coordinate['x']), round($this->_coordinate['y'] - $circle / 2),
+				round($this->_coordinate['x']), round($this->_coordinate['y']),
+				round($this->_coordinate['x'] - $circle), round($this->_coordinate['y']),
+			];
+		}
+		
 		imagefilledpolygon($this->_image, $points, 3, $col);
 		$bg = $this->getRGB($this->_width / 2, $this->_height / 5);
 		for ($y = 0; $y < $this->_height; $y++) {
 			for ($x = 0; $x < $this->_width; $x++) {
 				
 				$RGB = $this->getRGB($x, $y);
-				
-				if (!$this->isBG($RGB) && !$this->isChess($RGB)) {
-					
+				if (!$this->isBG($RGB)) {
 					if ($this->isSimilar($bg, $RGB, $this->_CONF['BG_DIFF'])) {
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
@@ -243,11 +255,11 @@ class JumpGameUp
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
 					//棋子在左边，x坐标左边全部去除
-					if ($coordinateTop['x'] < round($this->_width / 2) && $x <= ($coordinateTop['x']+$this->_CONF['CHESS_DIFF'])) {
+					if ($coordinateTop['x'] < round($this->_width / 2) && $x <= ($coordinateTop['x'] + 40)) {
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
 					//棋子在右边，x坐标右边全部去除
-					if ($coordinateTop['x'] > round($this->_width / 2) && $x >= ($coordinateTop['x']-$this->_CONF['CHESS_DIFF'])) {
+					if ($coordinateTop['x'] > round($this->_width / 2) && $x >= ($coordinateTop['x'] - 40)) {
 						imagesetpixel($this->_image, $x, $y, $col);
 					}
 					
@@ -269,7 +281,6 @@ class JumpGameUp
 					if ($this->isSimilar($RGB, $tempChessboard, $this->_CONF['CHESSBOARD_DIFF'])) {
 						$chessboardCoordinates[] = ['x' => $x, 'y' => $y];
 					}
-					
 				}
 			}
 			
