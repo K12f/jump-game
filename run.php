@@ -200,6 +200,8 @@ class JumpGameUp
 		if (round(abs($x - $this->_coordinateShin['x'])) > 30) {
 			$x = $this->_coordinateShin['x'];
 			$y = $this->_coordinateShin['y'] + 110;
+			$coordinateTop['x'] = $this->_coordinateShin['x'];
+			$coordinateTop['y'] = $this->_coordinateShin['y'];
 		}
 		return ['x' => $x, 'y' => $y];
 	}
