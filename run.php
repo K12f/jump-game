@@ -41,7 +41,6 @@ class JumpGameUp
 			//0.扫描手机，获取图片
 
 			$this->screenCap();
-			file_put_contents("./screen/screen_{$this->_id}.png", file_get_contents($this->_screenName));
 			//1.获取图片信息
 			$this->setImage($this->_screenName);
 			if (empty($this->_image)) {
@@ -230,14 +229,16 @@ class JumpGameUp
 				round($this->_coordinate['x']), round($this->_coordinate['y']),
 				round($this->_coordinate['x'] + $circle), round($this->_coordinate['y']),
 			];
-		}
-		//棋子在右边，x坐标右边全部去除
-		if ($coordinateTop['x'] > round($this->_width / 2)) {
+		}else {
 			$points = [
 				round($this->_coordinate['x']), round($this->_coordinate['y'] - $circle / 2),
 				round($this->_coordinate['x']), round($this->_coordinate['y']),
 				round($this->_coordinate['x'] - $circle), round($this->_coordinate['y']),
 			];
+		 
+		}
+		//棋子在右边，x坐标右边全部去除
+		if ($coordinateTop['x'] > round($this->_width / 2)) {
 		}
 		
 		imagefilledpolygon($this->_image, $points, 3, $col);
